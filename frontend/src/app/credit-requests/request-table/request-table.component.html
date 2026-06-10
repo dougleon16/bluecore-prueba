@@ -1,0 +1,76 @@
+<section class="space-y-4">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div class="flex flex-wrap items-center gap-1.5">
+      @for (filter of FILTERS; track filter.value) {
+        <button
+          type="button"
+          class="rounded-full px-3.5 py-1.5 text-xs font-medium border transition"
+          [class]="
+            activeFilter() === filter.value
+              ? 'bg-ink text-cream border-ink'
+              : 'bg-transparent text-foreground border-border hover:bg-muted'
+          "
+          (click)="setFilter(filter.value)"
+        >
+          {{ filter.label }}
+        </button>
+      }
+    </div>
+    <div class="relative">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-search absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground"
+        aria-hidden="true"
+      >
+        <path d="m21 21-4.34-4.34"></path>
+        <circle cx="11" cy="11" r="8"></circle>
+      </svg>
+      <input
+        type="search"
+        placeholder="Buscar por cédula o ID…"
+        class="input pl-9 w-72"
+        (input)="onSearch($event)"
+      />
+    </div>
+  </div>
+
+  <div class="rounded-xl border bg-card overflow-hidden">
+    <div
+      class="hidden md:grid grid-cols-12 px-6 py-3 border-b bg-muted/40 font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+    >
+      <div class="col-span-3">Cédula</div>
+      <div class="col-span-2">Monto</div>
+      <div class="col-span-1">Plazo</div>
+      <div class="col-span-2">Estado</div>
+      <div class="col-span-2">Creada</div>
+      <div class="col-span-2 text-right">Acciones</div>
+    </div>
+
+    @if (loading()) {
+      <div class="px-6 py-12 text-center text-sm text-muted-foreground">Cargando solicitudes…</div>
+    } @else if (displayedRequests().length === 0) {
+      <div class="px-6 py-12 text-center text-sm text-muted-foreground">
+        No hay solicitudes que mostrar.
+      </div>
+    } @else {
+      <ul class="divide-y">
+        @for (request of displayedRequests(); track request.id) {
+          <li
+            app-request-row
+            [request]="request"
+            (approve)="approve.emit($event)"
+            (reject)="reject.emit($event)"
+          ></li>
+        }
+      </ul>
+    }
+  </div>
+</section>
