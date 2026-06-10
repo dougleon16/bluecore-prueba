@@ -17,14 +17,10 @@ export class CreateFormComponent {
   readonly loading = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
-  constructor() {
-    const destroyRef = inject(DestroyRef);
-    const sub = this.form.valueChanges.subscribe(() => this.errorMessage.set(null));
-    destroyRef.onDestroy(() => sub.unsubscribe());
-  }
+  private static readonly CEDULA_REGEX = /^(?:[1-9]|PE|E|N)-(?:\d{1,4})-\d{1,6}$/i;
 
   readonly form = this.fb.group({
-    cedula: ['', [Validators.required]],
+    cedula: ['', [Validators.required, Validators.pattern(CreateFormComponent.CEDULA_REGEX)]],
     amount: [
       null as number | null,
       [Validators.required, Validators.min(500), Validators.max(50000)],
@@ -34,6 +30,12 @@ export class CreateFormComponent {
       [Validators.required, Validators.min(6), Validators.max(60)],
     ],
   });
+
+  constructor() {
+    const destroyRef = inject(DestroyRef);
+    const sub = this.form.valueChanges.subscribe(() => this.errorMessage.set(null));
+    destroyRef.onDestroy(() => sub.unsubscribe());
+  }
 
   submit(): void {
     if (this.form.invalid) {

@@ -17,8 +17,14 @@
           (form.get('cedula')?.invalid && form.get('cedula')?.touched ? ' input--error' : '')
         "
       />
-      @if (form.get('cedula')?.invalid && form.get('cedula')?.touched) {
-        <p class="mt-1 text-xs text-red-500 font-mono">La cédula es obligatoria.</p>
+      @if (form.get('cedula')?.touched) {
+        @if (form.get('cedula')?.hasError('required')) {
+          <p class="mt-1 text-xs text-red-500 font-mono">La cédula es obligatoria.</p>
+        } @else if (form.get('cedula')?.hasError('pattern')) {
+          <p class="mt-1 text-xs text-red-500 font-mono">
+            Formato inválido. Ej: 8-123-456, PE-5-687, E-8-123, N-1234-1234
+          </p>
+        }
       }
     </div>
   </label>
