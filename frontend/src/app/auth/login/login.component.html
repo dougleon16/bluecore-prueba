@@ -1,0 +1,142 @@
+<!-- <div class="flex min-h-screen items-center justify-center">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="w-full max-w-sm space-y-4">
+    <h1 class="text-2xl font-semibold">Sign in</h1>
+
+    @if (errorMessage()) {
+      <p class="text-sm text-red-600">{{ errorMessage() }}</p>
+    }
+
+    <div>
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" />
+    </div>
+
+    <div>
+      <label for="password">Password</label>
+      <input id="password" type="password" formControlName="password" />
+    </div>
+
+    <button type="submit" [disabled]="loading()">
+      {{ loading() ? 'Signing in…' : 'Sign in' }}
+    </button>
+  </form>
+</div> -->
+
+<main class="min-h-screen grid lg:grid-cols-2 paper">
+  <section
+    class="hidden lg:flex flex-col justify-between bg-ink text-cream p-12 relative overflow-hidden"
+  >
+    <div class="flex items-center gap-2 text-cream/90">
+      <div
+        class="h-8 w-8 rounded-md bg-accent grid place-items-center font-display text-ink font-semibold"
+      >
+        B
+      </div>
+      <span class="font-mono text-xs tracking-widest uppercase">Bluecore · Créditos</span>
+    </div>
+    <div class="relative z-10">
+      <h1 class="font-display text-5xl xl:text-6xl leading-[1.02] text-cream">
+        Gestiona <em class="text-accent not-italic">solicitudes de crédito</em> con claridad y
+        rigor.
+      </h1>
+      <p class="mt-6 max-w-md text-cream/70 text-sm leading-relaxed">
+        Plataforma interna para crear, evaluar y dar seguimiento a las solicitudes de financiamiento
+        de tus clientes.
+      </p>
+      <dl class="mt-10 grid grid-cols-3 gap-6 max-w-md">
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-widest text-cream/50">Monto</dt>
+          <dd class="mt-1 font-display text-lg text-cream">$500 — $50K</dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-widest text-cream/50">Plazo</dt>
+          <dd class="mt-1 font-display text-lg text-cream">6 — 60 meses</dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10px] uppercase tracking-widest text-cream/50">Estados</dt>
+          <dd class="mt-1 font-display text-lg text-cream">3 flujos</dd>
+        </div>
+      </dl>
+    </div>
+    <p class="font-mono text-[11px] text-cream/40 relative z-10">
+      v1.0 · Prueba técnica Full Stack
+    </p>
+    <div class="absolute -right-32 -bottom-32 h- w-md rounded-full bg-accent/20 blur-3xl"></div>
+    <div class="absolute right-10 top-1/3 h-2 w-2 rounded-full bg-accent"></div>
+  </section>
+  <section class="flex items-center justify-center p-6 sm:p-12">
+    <div class="w-full max-w-sm">
+      <div class="lg:hidden flex items-center gap-2 mb-10">
+        <div
+          class="h-8 w-8 rounded-md bg-ink grid place-items-center font-display text-cream font-semibold"
+        >
+          B
+        </div>
+        <span class="font-mono text-xs tracking-widest uppercase text-muted-foreground"
+          >Bluecore · Créditos</span
+        >
+      </div>
+      <p class="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">Acceso</p>
+      <h2 class="mt-2 font-display text-3xl text-foreground">Inicia sesión</h2>
+      <p class="mt-2 text-sm text-muted-foreground">
+        Usa tus credenciales corporativas para entrar al panel.
+      </p>
+      <form [formGroup]="form" (ngSubmit)="submit()" class="mt-8 space-y-5">
+        @if (errorMessage()) {
+          <p class="text-sm text-red-500 font-mono">{{ errorMessage() }}</p>
+        }
+        <label for="email" class="block">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+            >Correo</span
+          >
+          <div class="mt-1.5">
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              autocomplete="email"
+              placeholder="tu@bluecore.com"
+              [class]="
+                'input' +
+                (form.get('email')?.invalid && form.get('email')?.touched ? ' input--error' : '')
+              "
+            />
+            @if (form.get('email')?.invalid && form.get('email')?.touched) {
+              <p class="mt-1 text-xs text-red-500 font-mono">Ingresa un correo válido.</p>
+            }
+          </div>
+        </label>
+        <label for="password" class="block">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground"
+            >Contraseña</span
+          >
+          <div class="mt-1.5">
+            <input
+              id="password"
+              type="password"
+              formControlName="password"
+              autocomplete="current-password"
+              placeholder="••••••••"
+              [class]="
+                'input' +
+                (form.get('password')?.invalid && form.get('password')?.touched
+                  ? ' input--error'
+                  : '')
+              "
+            />
+            @if (form.get('password')?.invalid && form.get('password')?.touched) {
+              <p class="mt-1 text-xs text-red-500 font-mono">Mínimo 6 caracteres.</p>
+            }
+          </div>
+        </label>
+        <button
+          type="submit"
+          [disabled]="loading()"
+          class="w-full rounded-md bg-ink text-cream font-medium text-sm py-2.5 hover:bg-ink/90 transition disabled:opacity-60"
+        >
+          {{ loading() ? 'Entrando…' : 'Entrar' }}
+        </button>
+      </form>
+    </div>
+  </section>
+</main>
