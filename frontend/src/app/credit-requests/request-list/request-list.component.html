@@ -14,7 +14,7 @@
         </p>
       </div>
       <div class="lg:col-span-5">
-        <app-request-stats [requests]="requests()" />
+        <app-request-stats [requests]="allRequests()" />
       </div>
     </section>
 
@@ -81,3 +81,7 @@
     </footer>
   </main>
 </div>
+
+@if (rejectTargetId() !== null) {
+  <app-reject-modal (confirmed)="onRejectConfirmed($event)" (cancelled)="onRejectCancelled()" />
+}
