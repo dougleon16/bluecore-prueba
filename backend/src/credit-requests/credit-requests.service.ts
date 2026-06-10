@@ -37,18 +37,18 @@ export class CreditRequestsService {
     const request = await this.repository.findOne({ where: { id } });
 
     if (!request) {
-      throw new NotFoundException(`Credit request #${id} not found`);
+      throw new NotFoundException(`Solicitud de crédito #${id} no encontrada`);
     }
 
     if (request.status !== RequestStatus.PENDING) {
       throw new BadRequestException(
-        'Only pending requests can be approved or rejected',
+        'Solo se pueden aprobar o rechazar solicitudes en estado pendiente',
       );
     }
 
     if (dto.status === RequestStatus.REJECTED && !dto.comment?.trim()) {
       throw new BadRequestException(
-        'A comment is required when rejecting a request',
+        'Se requiere un comentario al rechazar una solicitud',
       );
     }
 
