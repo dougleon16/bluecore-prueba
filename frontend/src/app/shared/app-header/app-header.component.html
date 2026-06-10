@@ -1,0 +1,58 @@
+<header class="border-b bg-background/70 backdrop-blur sticky top-0 z-30">
+  <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div
+        class="h-9 w-9 rounded-md bg-ink grid place-items-center font-display text-cream font-semibold"
+      >
+        B
+      </div>
+      <div>
+        <p class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground leading-none">
+          Bluecore
+        </p>
+        <p class="font-display text-base leading-tight">Panel de Créditos</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      @if (isDemoMode()) {
+        <span
+          class="hidden md:inline-flex items-center gap-1.5 rounded-full border border-warning/40 bg-warning/10 px-2.5 py-0.5 text-[11px] font-mono uppercase tracking-wider text-warning-foreground"
+          ><span class="h-1.5 w-1.5 rounded-full bg-warning"></span>Modo demo</span
+        >
+      }
+      @if (email()) {
+        <div class="text-right hidden sm:block">
+          <p class="text-sm leading-tight">{{ email() }}</p>
+          <p class="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            analista
+          </p>
+        </div>
+      }
+      <button
+        type="button"
+        class="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm hover:bg-muted transition"
+        aria-label="Cerrar sesión"
+        (click)="logoutClick.emit()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-log-out h-3.5 w-3.5"
+          aria-hidden="true"
+        >
+          <path d="m16 17 5-5-5-5"></path>
+          <path d="M21 12H9"></path>
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        </svg>
+        Salir
+      </button>
+    </div>
+  </div>
+</header>
