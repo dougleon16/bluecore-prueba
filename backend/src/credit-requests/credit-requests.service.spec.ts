@@ -30,6 +30,57 @@ describe('CreditRequestsService', () => {
 
   afterEach(() => jest.clearAllMocks());
 
+  describe('create', () => {
+    it('creates and saves a new credit request', async () => {
+      const dto = { cedula: '1234567890', amount: 1000, termMonths: 12 };
+      const user = { id: 1 };
+      const created = {
+        ...dto,
+        createdBy: { id: 1 },
+        status: RequestStatus.PENDING,
+      };
+      mockRepository.create.mockReturnValue(created);
+      mockRepository.save.mockResolvedValue(created);
+
+      const result = await service.create(dto, user);
+
+      expect(mockRepository.create).toHaveBeenCalledWith({
+        ...dto,
+        createdBy: { id: 1 },
+      });
+      expect(mockRepository.save).toHaveBeenCalledWith(created);
+      expect(result).toBe(created);
+    });
+  });
+
+  describe('findAll', () => {
+    it('returns all requests when no status filter is given', async () => {
+      const list = [{ id: 1 }, { id: 2 }];
+      mockRepository.find.mockResolvedValue(list);
+
+      const result = await service.findAll();
+
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        where: {},
+        order: { createdAt: 'DESC' },
+      });
+      expect(result).toBe(list);
+    });
+
+    it('returns filtered requests when status is provided', async () => {
+      const list = [{ id: 1, status: RequestStatus.PENDING }];
+      mockRepository.find.mockResolvedValue(list);
+
+      const result = await service.findAll(RequestStatus.PENDING);
+
+      expect(mockRepository.find).toHaveBeenCalledWith({
+        where: { status: RequestStatus.PENDING },
+        order: { createdAt: 'DESC' },
+      });
+      expect(result).toBe(list);
+    });
+  });
+
   describe('updateStatus', () => {
     it('throws NotFoundException when the request does not exist', async () => {
       mockRepository.findOne.mockResolvedValue(null);

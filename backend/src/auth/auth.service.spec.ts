@@ -84,5 +84,27 @@ describe('AuthService', () => {
         service.register({ email: 'taken@test.com', password: '123456' }),
       ).rejects.toThrow(ConflictException);
     });
+
+    it('creates a new user and returns id and email', async () => {
+      mockUserRepository.findOne.mockResolvedValue(null);
+      mockUserRepository.create.mockReturnValue({
+        id: 2,
+        email: 'new@test.com',
+        password: 'hashed',
+      });
+      mockUserRepository.save.mockResolvedValue({
+        id: 2,
+        email: 'new@test.com',
+      });
+
+      const result = await service.register({
+        email: 'new@test.com',
+        password: 'secret123',
+      });
+
+      expect(result).toEqual({ id: 2, email: 'new@test.com' });
+      expect(mockUserRepository.create).toHaveBeenCalled();
+      expect(mockUserRepository.save).toHaveBeenCalled();
+    });
   });
 });
