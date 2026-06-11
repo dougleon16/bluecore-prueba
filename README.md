@@ -11,7 +11,7 @@ Sistema interno para registrar, evaluar y dar seguimiento a solicitudes de créd
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <url-del-repositorio>
+git clone git@github.com:dougleon16/bluecore-prueba.git
 cd bluecore-test
 ```
 
