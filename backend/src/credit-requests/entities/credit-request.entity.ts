@@ -26,7 +26,7 @@ export class CreditRequest {
   @Column({ type: 'decimal', precision: 12, scale: 2 })
   amount: number;
 
-  @Column({ name: 'term_months' })
+  @Column({ type: 'int', name: 'term_months' })
   termMonths: number;
 
   @Column({ type: 'enum', enum: RequestStatus, default: RequestStatus.PENDING })
