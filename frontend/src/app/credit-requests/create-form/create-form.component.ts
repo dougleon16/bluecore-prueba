@@ -1,5 +1,11 @@
 import { Component, DestroyRef, inject, output, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { CreditRequestsService } from '../credit-requests.service';
 import type { CreditRequest } from '../../core/models/credit-request.model';
 
@@ -19,6 +25,12 @@ export class CreateFormComponent {
 
   private static readonly CEDULA_REGEX = /^(?:[1-9]|PE|E|N)-(?:\d{1,4})-\d{1,6}$/i;
 
+  private static integerValidator(control: AbstractControl): ValidationErrors | null {
+    const val = control.value;
+    if (val === null || val === undefined || val === '') return null;
+    return Number.isInteger(Number(val)) ? null : { integer: true };
+  }
+
   readonly form = this.fb.group({
     cedula: ['', [Validators.required, Validators.pattern(CreateFormComponent.CEDULA_REGEX)]],
     amount: [
@@ -27,7 +39,12 @@ export class CreateFormComponent {
     ],
     termMonths: [
       null as number | null,
-      [Validators.required, Validators.min(6), Validators.max(60)],
+      [
+        Validators.required,
+        Validators.min(6),
+        Validators.max(60),
+        CreateFormComponent.integerValidator,
+      ],
     ],
   });
 
