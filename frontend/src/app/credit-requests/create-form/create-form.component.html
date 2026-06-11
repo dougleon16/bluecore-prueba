@@ -57,6 +57,7 @@
       <input
         formControlName="termMonths"
         type="number"
+        step="1"
         placeholder="6 – 60"
         [class]="
           'input' +
@@ -66,7 +67,13 @@
         "
       />
       @if (form.get('termMonths')?.invalid && form.get('termMonths')?.touched) {
-        <p class="mt-1 text-xs text-red-500 font-mono">El plazo debe estar entre 6 y 60 meses.</p>
+        @if (form.get('termMonths')?.hasError('integer')) {
+          <p class="mt-1 text-xs text-red-500 font-mono">
+            El plazo debe ser un número entero (ej. 12, 24, 36).
+          </p>
+        } @else {
+          <p class="mt-1 text-xs text-red-500 font-mono">El plazo debe estar entre 6 y 60 meses.</p>
+        }
       }
     </div>
   </label>
