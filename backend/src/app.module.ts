@@ -20,6 +20,13 @@ import { CreditRequest } from './credit-requests/entities/credit-request.entity'
         database: config.get<string>('DB_NAME'),
         entities: [User, CreditRequest],
         synchronize: config.get<string>('NODE_ENV') !== 'production',
+        keepConnectionAlive: true,
+        connectTimeout: 10_000,
+        extra: {
+          connectionLimit: 10,
+          enableKeepAlive: true,
+          keepAliveInitialDelay: 10_000,
+        },
       }),
     }),
     AuthModule,
