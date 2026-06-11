@@ -229,7 +229,7 @@ AppComponent (router-outlet)
     └── RequestListComponent   ← orquesta todos los componentes hijo
             ├── AppHeaderComponent
             ├── RequestStatsComponent
-            ├── RequestTableComponent  ← RequestRowComponent (×n)
+            ├── RequestTableComponent  ← RequestRowComponent 
             ├── CreateFormComponent
             └── RejectModalComponent
 ```
