@@ -182,10 +182,56 @@ cd frontend && npm test
 
 ---
 
-## Decisiones de diseño
+## Stack tecnológico
 
-- **NestJS + TypeORM** — módulos, inyección de dependencias y sincronización automática de esquema en desarrollo (`synchronize: true`).
-- **JWT stateless** — el token lleva `sub` y `email`; el servidor no guarda estado de sesión.
-- **Reglas de negocio en la capa de servicio** — las transiciones de estado viven en `CreditRequestsService`, aisladas y testeables sin levantar HTTP.
-- **Angular signals** — `AuthService` expone un `signal<string | null>` para el token; `isAuthenticated` es un `computed` derivado. Sin `BehaviorSubject` ni NgRx.
-- **`authInterceptor` funcional** — usa `inject()` para leer el token, alineado con las buenas prácticas de Angular 17+.
+| Capa           | Tecnología            | Por qué                                                                                                                   |
+| -------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Backend        | **NestJS 10**         | Framework opinionado con módulos, DI y decoradores — reduce boilerplate y facilita los tests unitarios                    |
+| ORM            | **TypeORM**           | Integración nativa con NestJS; `synchronize: true` crea el esquema automáticamente en desarrollo sin migraciones manuales |
+| Base de datos  | **MySQL 8 (AWS RDS)** | Requerimiento de la prueba; TypeORM abstrae el dialecto                                                                   |
+| Autenticación  | **Passport + JWT**    | Estándar de la industria para APIs REST stateless; el token lleva `sub` y `email`, el servidor no guarda sesión           |
+| Validación     | **class-validator**   | Decoradores en los DTOs — separa la validación de formato de las reglas de negocio                                        |
+| Frontend       | **Angular 21**        | Framework completo con router, formularios reactivos y sistema de DI propio                                               |
+| Estado         | **Signals**           | API reactiva nativa de Angular 17+; sin necesidad de NgRx ni RxJS subjects para este alcance                              |
+| Estilos        | **Tailwind CSS 4**    | Utility-first — diseño consistente sin archivos de estilos separados                                                      |
+| Tests backend  | **Jest**              | Integrado en NestJS; TestingModule permite aislar servicios con mocks sin levantar HTTP                                   |
+| Tests frontend | **Vitest**            | Integrado en `@angular/build:unit-test`; compatible con el ecosistema Vite que usa Angular 21                             |
+
+---
+
+## Arquitectura
+
+El backend sigue una arquitectura por capas donde la lógica solo fluye hacia abajo — el controlador nunca accede directamente al repositorio:
+
+```
+HTTP Request
+    │
+    ▼
+Controller          ← valida formato (DTOs + class-validator), devuelve respuesta
+    │
+    ▼
+Service             ← aplica reglas de negocio (transiciones de estado, validaciones cruzadas)
+    │
+    ▼
+Repository          ← acceso a datos mediante TypeORM
+    │
+    ▼
+MySQL (RDS)
+```
+
+El frontend sigue el patrón de servicios compartidos con componentes standalone:
+
+```
+AppComponent (router-outlet)
+    │
+    ├── LoginComponent         ← formulario reactivo + AuthService
+    │
+    └── RequestListComponent   ← orquesta todos los componentes hijo
+            ├── AppHeaderComponent
+            ├── RequestStatsComponent
+            ├── RequestTableComponent  ← RequestRowComponent (×n)
+            ├── CreateFormComponent
+            └── RejectModalComponent
+```
+
+`AuthService` mantiene el token en un `signal<string | null>`. El `authInterceptor` funcional lo lee con `inject()` y adjunta el header `Authorization: Bearer <token>` en cada petición saliente. El `authGuard` protege la ruta `/solicitudes` redirigiendo a `/login` si no hay token.
